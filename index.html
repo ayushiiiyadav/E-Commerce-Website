@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zivara | Diamond Pendants & Neck Chains</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="loader">
+    <div class="loader-inner">
+      <svg class="loader-gem" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="30,4 56,20 56,40 30,56 4,40 4,20" fill="none" stroke="#c9a96e" stroke-width="1.5"/>
+        <polygon points="30,4 56,20 30,30" fill="#c9a96e" opacity="0.3"/>
+        <polygon points="30,4 4,20 30,30" fill="#c9a96e" opacity="0.5"/>
+        <polygon points="4,20 4,40 30,30" fill="#c9a96e" opacity="0.4"/>
+        <polygon points="56,20 56,40 30,30" fill="#c9a96e" opacity="0.2"/>
+        <polygon points="4,40 30,56 30,30" fill="#c9a96e" opacity="0.6"/>
+        <polygon points="56,40 30,56 30,30" fill="#c9a96e" opacity="0.35"/>
+      </svg>
+      <p class="loader-brand">ZIVARA</p>
+    </div>
+  </div>
+
+  <div id="auth-overlay" class="modal-overlay hidden">
+    <div class="auth-modal">
+      <button class="modal-close" onclick="closeAuth()">✕</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
+      </div>
+
+      <div id="login-form" class="auth-form">
+        <div class="auth-header">
+          <h2>Welcome back</h2>
+          <p>Sign in to access your wishlist & orders</p>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" />
+        </div>
+        <p class="auth-error hidden" id="login-error"></p>
+        <button class="btn-primary full" onclick="handleLogin()">Sign In</button>
+        <p class="auth-switch">Don't have an account? <span onclick="switchTab('signup')">Create one</span></p>
+      </div>
+
+      <div id="signup-form" class="auth-form hidden">
+        <div class="auth-header">
+          <h2>Join Zivara</h2>
+          <p>Create an account for a personal experience</p>
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signup-name" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="signup-email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signup-password" placeholder="Min. 6 characters" />
+        </div>
+        <p class="auth-error hidden" id="signup-error"></p>
+        <button class="btn-primary full" onclick="handleSignup()">Create Account</button>
+        <p class="auth-switch">Already have an account? <span onclick="switchTab('login')">Sign in</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="cart-overlay" class="modal-overlay hidden" onclick="closeCartIfOutside(event)">
+    <div id="cart-drawer" class="cart-drawer">
+      <div class="drawer-header">
+        <h3>Your Cart <span id="cart-badge">0</span></h3>
+        <button class="modal-close" onclick="closeCart()">✕</button>
+      </div>
+      <div id="cart-items" class="cart-items"></div>
+      <div id="cart-footer" class="cart-footer hidden">
+        <div class="cart-total-row">
+          <span>Subtotal</span>
+          <span id="cart-total">₹0</span>
+        </div>
+        <button class="btn-primary full" onclick="checkout()">Proceed to Checkout</button>
+        <button class="btn-ghost full" onclick="closeCart()">Continue Shopping</button>
+      </div>
+      <div id="cart-empty" class="cart-empty">
+        <div class="empty-icon">💎</div>
+        <p>Your cart is empty</p>
+        <button class="btn-primary" onclick="closeCart()">Explore Collection</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="wishlist-overlay" class="modal-overlay hidden" onclick="closeWishlistIfOutside(event)">
+    <div id="wishlist-drawer" class="cart-drawer">
+      <div class="drawer-header">
+        <h3>Wishlist <span id="wishlist-badge">0</span></h3>
+        <button class="modal-close" onclick="closeWishlist()">✕</button>
+      </div>
+      <div id="wishlist-items" class="cart-items"></div>
+      <div id="wishlist-empty" class="cart-empty">
+        <div class="empty-icon">🤍</div>
+        <p>No saved pieces yet</p>
+        <button class="btn-primary" onclick="closeWishlist()">Explore Collection</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profile-overlay" class="modal-overlay hidden">
+    <div class="profile-modal">
+      <button class="modal-close" onclick="closeProfile()">✕</button>
+      <div class="profile-tabs">
+        <button class="profile-tab active" onclick="switchProfileTab('account')">Account</button>
+        <button class="profile-tab" onclick="switchProfileTab('orders')">Order History</button>
+      </div>
+      <div id="account-tab" class="profile-content">
+        <div class="profile-avatar" id="profile-avatar-letter">A</div>
+        <h2 id="profile-name">Name</h2>
+        <p id="profile-email" class="profile-email-text">email</p>
+        <button class="btn-ghost" onclick="handleLogout()">Sign Out</button>
+      </div>
+      <div id="orders-tab" class="profile-content hidden">
+        <h3 class="orders-title">Your Orders</h3>
+        <div id="orders-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <div id="site">
+
+    <header id="main-header">
+      <a href="#" class="logo-link" onclick="scrollToTop()">
+        <span class="logo-gem">◆</span>
+        <span class="logo-text">ZIVARA</span>
+      </a>
+      <nav class="main-nav">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#collection" class="nav-link">Collection</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-wrap">
+          <input type="text" id="search-input" placeholder="Search pieces…" oninput="filterProducts()" />
+          <span class="search-icon">⌕</span>
+        </div>
+        <button class="icon-btn" id="wishlist-btn" onclick="openWishlist()" title="Wishlist">
+          <span class="icon-heart">♡</span>
+          <span class="icon-count" id="wishlist-count">0</span>
+        </button>
+        <button class="icon-btn" onclick="openCart()" title="Cart">
+          <span>🛍</span>
+          <span class="icon-count" id="cart-count">0</span>
+        </button>
+        <button class="icon-btn auth-trigger" id="auth-btn" onclick="authButtonClicked()" title="Account">
+          <span id="auth-icon">👤</span>
+        </button>
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </header>
+
+    <div id="mobile-nav" class="mobile-nav hidden">
+      <a href="#home" onclick="closeMobileMenu()">Home</a>
+      <a href="#collection" onclick="closeMobileMenu()">Collection</a>
+      <a href="#about" onclick="closeMobileMenu()">About</a>
+    </div>
+
+    <section id="home" class="hero">
+      <div class="hero-slides">
+        <div class="hero-slide active" style="--bg: linear-gradient(135deg,#1a0a2e 0%,#2d1257 50%,#1a0a2e 100%)">
+          <div class="hero-content">
+            <span class="hero-eyebrow">New Arrivals 2025</span>
+            <h1 class="hero-headline">Brilliance<br/><em>in every stone</em></h1>
+            <p class="hero-sub">Handcrafted diamond pendants & chains for moments that matter.</p>
+            <a href="#collection" class="btn-primary hero-cta">Explore Collection</a>
+          </div>
+          <div class="hero-visual">
+            <div class="gem-float gem1">◆</div>
+            <div class="gem-float gem2">◇</div>
+            <div class="gem-float gem3">◆</div>
+            <div class="sparkle-ring"></div>
+          </div>
+        </div>
+        <div class="hero-slide" style="--bg: linear-gradient(135deg,#0d1f3c 0%,#1a3a5c 50%,#0d1f3c 100%)">
+          <div class="hero-content">
+            <span class="hero-eyebrow">Timeless Design</span>
+            <h1 class="hero-headline">Elegance<br/><em>in every curve</em></h1>
+            <p class="hero-sub">Each piece tells a story of artistry and devotion.</p>
+            <a href="#collection" class="btn-primary hero-cta">Shop Now</a>
+          </div>
+          <div class="hero-visual">
+            <div class="gem-float gem1" style="animation-delay:0.5s">◇</div>
+            <div class="gem-float gem2" style="animation-delay:1s">◆</div>
+            <div class="gem-float gem3" style="animation-delay:1.5s">◇</div>
+            <div class="sparkle-ring" style="animation-delay:0.3s"></div>
+          </div>
+        </div>
+        <div class="hero-slide" style="--bg: linear-gradient(135deg,#1f0d0d 0%,#3d1515 50%,#1f0d0d 100%)">
+          <div class="hero-content">
+            <span class="hero-eyebrow">Gift Someone Special</span>
+            <h1 class="hero-headline">Love<br/><em>beautifully worn</em></h1>
+            <p class="hero-sub">Diamond pieces crafted to celebrate your most cherished bonds.</p>
+            <a href="#collection" class="btn-primary hero-cta">Find a Gift</a>
+          </div>
+          <div class="hero-visual">
+            <div class="gem-float gem1" style="animation-delay:0.2s">◆</div>
+            <div class="gem-float gem2" style="animation-delay:0.8s">◇</div>
+            <div class="gem-float gem3" style="animation-delay:1.2s">◆</div>
+            <div class="sparkle-ring" style="animation-delay:0.6s"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-dots" id="hero-dots">
+        <button class="dot active" onclick="goToSlide(0)"></button>
+        <button class="dot" onclick="goToSlide(1)"></button>
+        <button class="dot" onclick="goToSlide(2)"></button>
+      </div>
+      <button class="hero-arrow left" onclick="prevSlide()">‹</button>
+      <button class="hero-arrow right" onclick="nextSlide()">›</button>
+    </section>
+
+    <div class="feature-strip">
+      <div class="feature-item">
+        <span>✦</span> Free shipping over ₹5,000
+      </div>
+      <div class="feature-item">
+        <span>✦</span> BIS Hallmarked Gold
+      </div>
+      <div class="feature-item">
+        <span>✦</span> 30-day easy returns
+      </div>
+      <div class="feature-item">
+        <span>✦</span> Lifetime polishing
+      </div>
+    </div>
+
+    <div class="filter-bar" id="collection">
+      <span class="section-eyebrow">— Collection —</span>
+      <h2 class="section-title">Our Pieces</h2>
+      <div class="filter-chips">
+        <button class="chip active" onclick="filterByTag('all', this)">All</button>
+        <button class="chip" onclick="filterByTag('pendant', this)">Pendants</button>
+        <button class="chip" onclick="filterByTag('necklace', this)">Necklaces</button>
+        <button class="chip" onclick="filterByTag('diamond', this)">Diamond</button>
+        <button class="chip" onclick="filterByTag('under3000', this)">Under ₹3,000</button>
+      </div>
+    </div>
+
+    <section class="products-grid" id="products-grid">
+    </section>
+
+    <div id="no-results" class="no-results hidden">
+      <p>No pieces match your search.</p>
+      <button class="btn-ghost" onclick="clearSearch()">Clear filter</button>
+    </div>
+
+    <section id="about" class="about-strip">
+      <div class="about-content">
+        <span class="section-eyebrow">— Our Story —</span>
+        <h2 class="section-title">Crafted with intention</h2>
+        <p>Zivara was born from a belief that jewellery is more than adornment — it is memory made tangible. Every pendant and chain in our collection is handcrafted by skilled artisans using ethically sourced diamonds and BIS-certified gold, designed to be worn every day and treasured for a lifetime.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Unique Designs</span></div>
+        <div class="stat"><span class="stat-num">12k+</span><span class="stat-label">Happy Customers</span></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Ethically Sourced</span></div>
+      </div>
+    </section>
+
+    <footer class="main-footer">
+      <div class="footer-brand">
+        <span class="logo-gem">◆</span>
+        <span class="logo-text">ZIVARA</span>
+        <p>"Elegance in every curve, brilliance in every stone."</p>
+      </div>
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <a href="#collection">Collection</a>
+        <a href="#about">About Us</a>
+        <a href="#" onclick="openCart()">Cart</a>
+        <a href="#" onclick="openWishlist()">Wishlist</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="#">Shipping Info</a>
+        <a href="#">Returns</a>
+        <a href="#">Care Guide</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Zivara. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
