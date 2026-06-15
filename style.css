@@ -408,9 +408,6 @@ input { font-family: inherit; }
 }
 .toast.hidden { opacity: 0; pointer-events: none; }
 
-/* ══════════════════
-   HEADER
-   ══════════════════ */
 #main-header {
   position: sticky; top: 0; z-index: 900;
   display: flex; align-items: center;
@@ -539,9 +536,6 @@ input { font-family: inherit; }
 }
 @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:none} }
 
-/* ══════════════════
-   HERO
-   ══════════════════ */
 .hero {
   position: relative;
   height: calc(100vh - 70px);
@@ -604,7 +598,6 @@ input { font-family: inherit; }
 
 .hero-cta { text-decoration: none; }
 
-/* Floating gems */
 .hero-visual {
   flex: 1; position: relative;
   height: 100%;
@@ -666,9 +659,6 @@ input { font-family: inherit; }
 .hero-arrow.right { right: 24px; }
 .hero-arrow:hover { background: rgba(201,169,110,0.3); }
 
-/* ══════════════════
-   FEATURE STRIP
-   ══════════════════ */
 .feature-strip {
   background: var(--ink);
   display: flex; align-items: center; justify-content: center;
@@ -689,9 +679,6 @@ input { font-family: inherit; }
 .feature-item:hover { color: var(--gold-light); }
 .feature-item span { color: var(--gold); }
 
-/* ══════════════════
-   FILTER BAR
-   ══════════════════ */
 .filter-bar {
   padding: 60px 40px 32px;
   text-align: center;
@@ -731,9 +718,6 @@ input { font-family: inherit; }
   color: var(--gold-light);
 }
 
-/* ══════════════════
-   PRODUCTS GRID
-   ══════════════════ */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -831,17 +815,12 @@ input { font-family: inherit; }
 }
 .btn-cart:hover { background: var(--ink-soft); }
 .btn-cart.added { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: white; }
-
-/* No results */
 .no-results {
   text-align: center; padding: 60px 40px;
   color: var(--muted);
 }
 .no-results.hidden { display: none; }
 
-/* ══════════════════
-   ABOUT STRIP
-   ══════════════════ */
 .about-strip {
   background: var(--ink);
   color: white;
@@ -870,9 +849,6 @@ input { font-family: inherit; }
 }
 .stat-label { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
 
-/* ══════════════════
-   FOOTER
-   ══════════════════ */
 .main-footer {
   background: #07040f;
   color: rgba(255,255,255,0.5);
@@ -898,18 +874,12 @@ input { font-family: inherit; }
   font-size: 0.75rem;
 }
 
-/* ══════════════════
-   SCROLL REVEAL
-   ══════════════════ */
 .reveal {
   opacity: 0; transform: translateY(24px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .reveal.visible { opacity: 1; transform: none; }
 
-/* ══════════════════
-   RESPONSIVE
-   ══════════════════ */
 @media (max-width: 900px) {
   #main-header { padding: 0 20px; }
   .main-nav { display: none; }
@@ -942,9 +912,7 @@ input { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.1ms !important; }
 }
-/* ══════════════════
-   SORT BAR  (added v2)
-   ══════════════════ */
+
 .sort-bar {
   display: flex;
   align-items: center;
@@ -981,9 +949,6 @@ input { font-family: inherit; }
   border-color: var(--gold);
 }
 
-/* ══════════════════
-   LOAD MORE  (added v2)
-   ══════════════════ */
 .load-more-wrap {
   text-align: center;
   padding: 8px 40px 56px;

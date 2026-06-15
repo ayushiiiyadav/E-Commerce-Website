@@ -1,10 +1,3 @@
-/* ══════════════════════════════════════════════════
-   ZIVARA — script.js
-   Features: Auth, Cart, Wishlist, Order History,
-             Hero Slider, Product Filter, Animations
-   ══════════════════════════════════════════════════ */
-
-/* ── PRODUCT DATA ── */
 const PRODUCTS = [
   {
     id: 1,
@@ -98,52 +91,38 @@ const PRODUCTS = [
   }
 ];
 
-/* ── STATE ── */
-let currentUser    = null;   // { name, email, password }
-let cart           = [];     // [{ productId, qty }]
-let wishlist       = [];     // [productId]
+let currentUser    = null;   
+let cart           = [];    
+let wishlist       = [];    
 let currentFilter  = 'all';
 let currentSearch  = '';
 
-/* ── STORAGE HELPERS ── */
 const store = {
   get:    (k)    => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } },
   set:    (k, v) => localStorage.setItem(k, JSON.stringify(v)),
   remove: (k)    => localStorage.removeItem(k)
 };
 
-/* Key namespaced to user for per-user data */
 const userKey = (suffix) => `zivara_${currentUser?.email || 'guest'}_${suffix}`;
 
-/* ── INIT ── */
 window.addEventListener('DOMContentLoaded', () => {
-  // Loader
   setTimeout(() => {
     document.getElementById('loader').classList.add('fade-out');
   }, 1800);
 
-  // Restore session
   const saved = store.get('zivara_session');
   if (saved) {
     currentUser = saved;
     restoreUserData();
     updateAuthUI();
   }
-
-  // Render products
   renderProducts(PRODUCTS);
 
-  // Hero auto-play
   startHeroAutoplay();
-
-  // Sticky header
   window.addEventListener('scroll', handleScroll);
-
-  // Scroll reveal
   observeReveal();
 });
 
-/* ── SCROLL ── */
 function handleScroll() {
   const header = document.getElementById('main-header');
   if (window.scrollY > 40) header.classList.add('scrolled');
@@ -153,8 +132,6 @@ function handleScroll() {
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-/* ── REVEAL OBSERVER ── */
 function observeReveal() {
   const els = document.querySelectorAll('.reveal');
   const obs = new IntersectionObserver((entries) => {
@@ -165,9 +142,6 @@ function observeReveal() {
   els.forEach(el => obs.observe(el));
 }
 
-/* ════════════════════════════════
-   HERO SLIDER
-   ════════════════════════════════ */
 let slideIdx = 0;
 let heroTimer = null;
 
@@ -185,9 +159,6 @@ function prevSlide() { goToSlide(slideIdx - 1); resetAutoplay(); }
 function startHeroAutoplay() { heroTimer = setInterval(() => goToSlide(slideIdx + 1), 5000); }
 function resetAutoplay()     { clearInterval(heroTimer); startHeroAutoplay(); }
 
-/* ════════════════════════════════
-   AUTH
-   ════════════════════════════════ */
 function openAuth()  { document.getElementById('auth-overlay').classList.remove('hidden'); }
 function closeAuth() { document.getElementById('auth-overlay').classList.add('hidden'); }
 
@@ -228,11 +199,9 @@ function handleSignup() {
   if (!email.includes('@')) return showAuthError('signup-error', 'Please enter a valid email.');
   if (password.length < 6) return showAuthError('signup-error', 'Password must be at least 6 characters.');
 
-  // Check existing
   const users = store.get('zivara_users') || {};
   if (users[email]) return showAuthError('signup-error', 'An account with this email already exists.');
 
-  // Register
   const user = { name, email, password };
   users[email] = user;
   store.set('zivara_users', users);
@@ -267,7 +236,6 @@ function loginAs(user) {
 }
 
 function handleLogout() {
-  // Save current data before logout
   saveUserData();
   currentUser = null;
   cart       = [];
@@ -310,10 +278,6 @@ function updateAuthUI() {
     icon.style.cssText = '';
   }
 }
-
-/* ════════════════════════════════
-   PROFILE MODAL
-   ════════════════════════════════ */
 function openProfile() {
   if (!currentUser) return openAuth();
   document.getElementById('profile-avatar-letter').textContent = currentUser.name.charAt(0).toUpperCase();
@@ -355,9 +319,6 @@ function renderOrders() {
   `).join('');
 }
 
-/* ════════════════════════════════
-   CART
-   ════════════════════════════════ */
 function openCart() {
   updateCartDrawer();
   document.getElementById('cart-overlay').classList.remove('hidden');
@@ -385,7 +346,6 @@ function addToCart(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   showToast(`${product.name} added to cart! 🛍`);
 
-  // Visual feedback on button
   const btn = document.querySelector(`[data-cart-id="${productId}"]`);
   if (btn) {
     btn.textContent = '✓ Added';
@@ -469,7 +429,6 @@ function updateCartDrawer() {
 
 function checkout() {
   if (!cart.length) return;
-  // Save as order
   const orders = store.get(userKey('orders')) || [];
   const items  = cart.map(({ productId, qty }) => {
     const p = PRODUCTS.find(pr => pr.id === productId);
@@ -484,7 +443,6 @@ function checkout() {
   orders.push(order);
   store.set(userKey('orders'), orders);
 
-  // Clear cart
   cart = [];
   saveUserData();
   updateCartUI();
@@ -493,9 +451,6 @@ function checkout() {
   showToast('Order placed successfully! 🎉');
 }
 
-/* ════════════════════════════════
-   WISHLIST
-   ════════════════════════════════ */
 function openWishlist() {
   updateWishlistDrawer();
   document.getElementById('wishlist-overlay').classList.remove('hidden');
@@ -523,7 +478,6 @@ function toggleWishlist(productId) {
   updateWishlistUI();
   updateWishlistDrawer();
 
-  // Update card button
   const btn = document.querySelector(`[data-wish-id="${productId}"]`);
   if (btn) {
     btn.textContent = wishlist.includes(productId) ? '❤' : '♡';
@@ -579,9 +533,6 @@ function updateProductCards() {
   });
 }
 
-/* ════════════════════════════════
-   PRODUCTS RENDER & FILTER
-   ════════════════════════════════ */
 function renderProducts(list) {
   const grid = document.getElementById('products-grid');
   const noRes = document.getElementById('no-results');
@@ -621,7 +572,6 @@ function renderProducts(list) {
     `;
   }).join('');
 
-  // Trigger reveal for new cards
   setTimeout(observeReveal, 50);
 }
 
@@ -640,14 +590,12 @@ function filterProducts() {
 function applyFilters() {
   let list = PRODUCTS;
 
-  // Tag filter
   if (currentFilter === 'under3000') {
     list = list.filter(p => p.price < 3000);
   } else if (currentFilter !== 'all') {
     list = list.filter(p => p.tags.includes(currentFilter));
   }
 
-  // Search
   if (currentSearch) {
     list = list.filter(p =>
       p.name.toLowerCase().includes(currentSearch) ||
@@ -667,9 +615,6 @@ function clearSearch() {
   renderProducts(PRODUCTS);
 }
 
-/* ════════════════════════════════
-   MOBILE NAV
-   ════════════════════════════════ */
 function toggleMobileMenu() {
   document.getElementById('mobile-nav').classList.toggle('hidden');
 }
@@ -677,9 +622,6 @@ function closeMobileMenu() {
   document.getElementById('mobile-nav').classList.add('hidden');
 }
 
-/* ════════════════════════════════
-   TOAST
-   ════════════════════════════════ */
 let toastTimer = null;
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -693,12 +635,10 @@ function showToast(msg) {
   }, 2800);
 }
 
-/* ── UTILS ── */
 function formatPrice(n) {
   return '₹' + n.toLocaleString('en-IN');
 }
 
-/* ── Close profile overlay on outside click ── */
 document.addEventListener('click', (e) => {
   const overlay = document.getElementById('profile-overlay');
   if (!overlay.classList.contains('hidden') && e.target === overlay) closeProfile();
@@ -706,7 +646,6 @@ document.addEventListener('click', (e) => {
   if (!authOverlay.classList.contains('hidden') && e.target === authOverlay) closeAuth();
 });
 
-/* ── Keyboard: ESC closes modals ── */
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   closeAuth();
