@@ -11,6 +11,7 @@
 </head>
 <body>
 
+  <!-- ── LOADING SCREEN ── -->
   <div id="loader">
     <div class="loader-inner">
       <svg class="loader-gem" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,6 +27,7 @@
     </div>
   </div>
 
+  <!-- ── AUTH MODAL ── -->
   <div id="auth-overlay" class="modal-overlay hidden">
     <div class="auth-modal">
       <button class="modal-close" onclick="closeAuth()">✕</button>
@@ -34,6 +36,7 @@
         <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
       </div>
 
+      <!-- Login Form -->
       <div id="login-form" class="auth-form">
         <div class="auth-header">
           <h2>Welcome back</h2>
@@ -52,6 +55,7 @@
         <p class="auth-switch">Don't have an account? <span onclick="switchTab('signup')">Create one</span></p>
       </div>
 
+      <!-- Signup Form -->
       <div id="signup-form" class="auth-form hidden">
         <div class="auth-header">
           <h2>Join Zivara</h2>
@@ -76,6 +80,7 @@
     </div>
   </div>
 
+  <!-- ── CART DRAWER ── -->
   <div id="cart-overlay" class="modal-overlay hidden" onclick="closeCartIfOutside(event)">
     <div id="cart-drawer" class="cart-drawer">
       <div class="drawer-header">
@@ -99,6 +104,7 @@
     </div>
   </div>
 
+  <!-- ── WISHLIST DRAWER ── -->
   <div id="wishlist-overlay" class="modal-overlay hidden" onclick="closeWishlistIfOutside(event)">
     <div id="wishlist-drawer" class="cart-drawer">
       <div class="drawer-header">
@@ -114,6 +120,7 @@
     </div>
   </div>
 
+  <!-- ── PROFILE / HISTORY MODAL ── -->
   <div id="profile-overlay" class="modal-overlay hidden">
     <div class="profile-modal">
       <button class="modal-close" onclick="closeProfile()">✕</button>
@@ -134,10 +141,13 @@
     </div>
   </div>
 
+  <!-- ── TOAST ── -->
   <div id="toast" class="toast hidden"></div>
 
+  <!-- ════════════════════ MAIN SITE ════════════════════ -->
   <div id="site">
 
+    <!-- HEADER -->
     <header id="main-header">
       <a href="#" class="logo-link" onclick="scrollToTop()">
         <span class="logo-gem">◆</span>
@@ -153,14 +163,14 @@
           <input type="text" id="search-input" placeholder="Search pieces…" oninput="filterProducts()" />
           <span class="search-icon">⌕</span>
         </div>
-        <button class="icon-btn" id="wishlist-btn" onclick="openWishlist()" title="Wishlist">
+        <a href="wishlist.html" class="icon-btn" id="wishlist-btn" title="Wishlist" style="text-decoration:none">
           <span class="icon-heart">♡</span>
           <span class="icon-count" id="wishlist-count">0</span>
-        </button>
-        <button class="icon-btn" onclick="openCart()" title="Cart">
+        </a>
+        <a href="cart.html" class="icon-btn" title="Cart" style="text-decoration:none">
           <span>🛍</span>
           <span class="icon-count" id="cart-count">0</span>
-        </button>
+        </a>
         <button class="icon-btn auth-trigger" id="auth-btn" onclick="authButtonClicked()" title="Account">
           <span id="auth-icon">👤</span>
         </button>
@@ -168,12 +178,16 @@
       <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
     </header>
 
+    <!-- MOBILE NAV -->
     <div id="mobile-nav" class="mobile-nav hidden">
       <a href="#home" onclick="closeMobileMenu()">Home</a>
       <a href="#collection" onclick="closeMobileMenu()">Collection</a>
       <a href="#about" onclick="closeMobileMenu()">About</a>
+      <a href="cart.html">Cart 🛍</a>
+      <a href="wishlist.html">Wishlist 🤍</a>
     </div>
 
+    <!-- HERO -->
     <section id="home" class="hero">
       <div class="hero-slides">
         <div class="hero-slide active" style="--bg: linear-gradient(135deg,#1a0a2e 0%,#2d1257 50%,#1a0a2e 100%)">
@@ -228,6 +242,7 @@
       <button class="hero-arrow right" onclick="nextSlide()">›</button>
     </section>
 
+    <!-- FEATURE STRIP -->
     <div class="feature-strip">
       <div class="feature-item">
         <span>✦</span> Free shipping over ₹5,000
@@ -243,6 +258,7 @@
       </div>
     </div>
 
+    <!-- FILTER BAR -->
     <div class="filter-bar" id="collection">
       <span class="section-eyebrow">— Collection —</span>
       <h2 class="section-title">Our Pieces</h2>
@@ -255,14 +271,18 @@
       </div>
     </div>
 
+    <!-- PRODUCTS GRID -->
     <section class="products-grid" id="products-grid">
+      <!-- Cards injected by JS -->
     </section>
 
+    <!-- NO RESULTS -->
     <div id="no-results" class="no-results hidden">
       <p>No pieces match your search.</p>
       <button class="btn-ghost" onclick="clearSearch()">Clear filter</button>
     </div>
 
+    <!-- ABOUT STRIP -->
     <section id="about" class="about-strip">
       <div class="about-content">
         <span class="section-eyebrow">— Our Story —</span>
@@ -276,6 +296,7 @@
       </div>
     </section>
 
+    <!-- FOOTER -->
     <footer class="main-footer">
       <div class="footer-brand">
         <span class="logo-gem">◆</span>
@@ -286,8 +307,8 @@
         <h4>Explore</h4>
         <a href="#collection">Collection</a>
         <a href="#about">About Us</a>
-        <a href="#" onclick="openCart()">Cart</a>
-        <a href="#" onclick="openWishlist()">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="wishlist.html">Wishlist</a>
       </div>
       <div class="footer-links">
         <h4>Support</h4>
@@ -301,7 +322,7 @@
       </div>
     </footer>
 
-  </div>
+  </div><!-- end #site -->
 
   <script src="script.js"></script>
 </body>
