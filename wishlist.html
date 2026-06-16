@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zivara | Wishlist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-header {
+      background: var(--ink);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .page-header .logo-link { display:flex; align-items:center; gap:8px; text-decoration:none; }
+    .page-header .logo-gem  { color: var(--gold); font-size: 1.1rem; }
+    .page-header .logo-text { font-family: var(--font-display); font-size:1.4rem; color: var(--gold-light); letter-spacing:0.2em; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.6); font-size:0.82rem; letter-spacing:0.05em;
+      text-decoration:none; transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--gold-light); }
+    .wishlist-page {
+      min-height: calc(100vh - 80px);
+      background: var(--surface);
+      padding: 48px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .wishlist-page-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300; color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .wishlist-page-subtitle {
+      font-size: 0.85rem; color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .wishlist-topbar {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .wishlist-topbar h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 400;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .wish-pill {
+      background: var(--ink); color: var(--gold-light);
+      font-size: 0.72rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .add-all-btn {
+      padding: 10px 22px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: white; border:none; border-radius:50px;
+      font-size:0.8rem; font-weight:500;
+      cursor:pointer; transition: all var(--transition);
+      box-shadow: 0 4px 14px rgba(160,120,64,0.3);
+    }
+    .add-all-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(160,120,64,0.4); }
+    .add-all-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .wish-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+      animation: cardIn 0.4s ease both;
+      position: relative;
+    }
+    .wish-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+    @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+    .wish-card-img {
+      width:100%; aspect-ratio:1/1;
+      background: #f8f4ee;
+      overflow: hidden;
+      position: relative;
+    }
+    .wish-card-img img {
+      width:100%; height:100%; object-fit:cover;
+      transition: transform 0.5s ease;
+    }
+    .wish-card:hover .wish-card-img img { transform: scale(1.05); }
+    .remove-wish-btn {
+      position: absolute; top:10px; right:10px;
+      width:32px; height:32px;
+      background:white; border:none; border-radius:50%;
+      font-size:0.9rem;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      cursor:pointer; transition: all var(--transition);
+      z-index:2; color:#c95050;
+    }
+    .remove-wish-btn:hover { background:#fff0f0; transform:scale(1.1); }
+    .wish-card-body { padding: 18px; }
+    .wish-card-tag {
+      font-size:0.65rem; font-weight:500;
+      letter-spacing:0.12em; text-transform:uppercase;
+      color: var(--gold); margin-bottom:4px;
+    }
+    .wish-card-name {
+      font-family: var(--font-display);
+      font-size:1.1rem; font-weight:400;
+      color: var(--ink); margin-bottom:4px;
+    }
+    .wish-card-desc {
+      font-size:0.78rem; color: var(--muted);
+      line-height:1.5; margin-bottom:14px;
+    }
+    .wish-card-price {
+      font-family: var(--font-display);
+      font-size:1.25rem; font-weight:600;
+      color: var(--gold-dark); margin-bottom:14px;
+    }
+    .wish-card-actions { display:flex; gap:8px; }
+    .wish-add-btn {
+      flex:1; padding:10px;
+      background: var(--ink); color: var(--gold-light);
+      border:none; border-radius:50px;
+      font-size:0.8rem; font-weight:500;
+      cursor:pointer; transition: all var(--transition);
+    }
+    .wish-add-btn:hover { background: var(--ink-soft); }
+    .wish-add-btn.added {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: white;
+    }
+    .wish-empty {
+      text-align:center; padding:100px 40px;
+    }
+    .wish-empty-icon { font-size:4rem; margin-bottom:20px; }
+    .wish-empty-title {
+      font-family: var(--font-display);
+      font-size:2rem; font-weight:300;
+      color: var(--ink); margin-bottom:10px;
+    }
+    .wish-empty-sub { font-size:0.88rem; color:var(--muted); margin-bottom:28px; }
+    .page-toast {
+      position:fixed; bottom:28px; left:50%;
+      transform:translateX(-50%) translateY(20px);
+      background: var(--ink); color: var(--gold-light);
+      padding:12px 24px; border-radius:50px;
+      font-size:0.85rem; opacity:0;
+      transition: all 0.3s ease;
+      z-index:999; white-space:nowrap; pointer-events:none;
+    }
+    .page-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    @media (max-width:900px) {
+      .wishlist-page { padding:32px 20px; }
+      .page-header { padding:20px; }
+    }
+    @media (max-width:500px) {
+      .wishlist-grid { grid-template-columns:1fr 1fr; gap:12px; }
+      .wish-card-body { padding:12px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="page-toast" class="page-toast"></div>
+  <header class="page-header">
+    <a href="index.html" class="logo-link">
+      <span class="logo-gem">◆</span>
+      <span class="logo-text">ZIVARA</span>
+    </a>
+    <a href="index.html" class="back-link">
+      <span>←</span> Continue Shopping
+    </a>
+  </header>
+  <main style="background:var(--surface); min-height:calc(100vh - 80px);">
+    <div class="wishlist-page">
+      <h1 class="wishlist-page-title">My Wishlist</h1>
+      <p class="wishlist-page-subtitle" id="wish-subtitle">Your saved pieces</p>
+      <div class="wishlist-topbar" id="wish-topbar">
+        <h3>
+          Saved Pieces
+          <span class="wish-pill" id="wish-pill">0</span>
+        </h3>
+        <button class="add-all-btn" id="add-all-btn" onclick="addAllToCart()" disabled>
+          Add All to Cart
+        </button>
+      </div>
+      <div class="wishlist-grid" id="wishlist-grid"></div>
+      <div class="wish-empty hidden" id="wish-empty">
+        <div class="wish-empty-icon">🤍</div>
+        <h3 class="wish-empty-title">No saved pieces yet</h3>
+        <p class="wish-empty-sub">Tap the heart on any piece to save it here</p>
+        <a href="index.html" class="btn-primary">Explore Collection</a>
+      </div>
+    </div>
+  </main>
+  <script>
+    const PRODUCTS = [
+      {id:1,name:'Diamond Solitaire Pendant',price:4999,desc:'Elegant solitaire diamond pendant for special moments.',img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:2,name:'Heart × Bow Pendant',price:5299,desc:'A whimsical blend of romance and playfulness.',img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:3,name:'Butterfly Pendant',price:2299,desc:'Delicate butterfly pendant for effortless elegance.',img:'https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:4,name:'Sapphire Drop Pendant',price:5299,desc:'Deep blue sapphire set in lustrous white gold.',img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:5,name:'Heart Diamond Pendant',price:5299,desc:'A heart of diamonds — wear your love every day.',img:'https://images.unsplash.com/photo-1573408301185-9519f94b5bff?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:6,name:'Classic Solitaire Pendant',price:7299,desc:'Timeless solitaire diamond pendant, forever in style.',img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:7,name:'Bow Charm Pendant',price:2299,desc:'Sweet bow pendant that adds a touch of charm.',img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:8,name:'Floral Diamond Pendant',price:6499,desc:'Blooming flower design with clustered diamonds.',img:'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:9,name:'Star Pendant',price:1899,desc:'Minimalist star pendant in polished gold.',img:'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:10,name:'Moon & Star Pendant',price:2799,desc:'Celestial moon and star duo on a fine chain.',img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:11,name:'Teardrop Crystal Pendant',price:3499,desc:'Teardrop crystal pendant with subtle shimmer.',img:'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:12,name:'Rose Gold Heart Pendant',price:4199,desc:'Open heart pendant in warm rose gold.',img:'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:13,name:'Infinity Diamond Pendant',price:5899,desc:'Infinity loop studded with brilliant-cut diamonds.',img:'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:14,name:'Evil Eye Pendant',price:1999,desc:'Protective evil eye charm in gold and enamel.',img:'https://images.unsplash.com/photo-1630350020038-c3a6e3af39b5?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:15,name:'Oval Emerald Pendant',price:6799,desc:'Vivid green emerald in a classic oval setting.',img:'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:16,name:'Diamond Swan Necklace',price:3499,desc:'Sleek and graceful neck chain.',img:'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:17,name:'Layered Gold Necklace',price:3299,desc:'Multi-layer necklace for a curated look.',img:'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:18,name:'Marine Wave Necklace',price:2299,desc:'Ocean-inspired necklace.',img:'https://images.unsplash.com/photo-1614793745253-6c20f8c53b1f?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:19,name:'Pearl Strand Necklace',price:4599,desc:'Lustrous freshwater pearl strand.',img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:20,name:'Diamond Tennis Necklace',price:12999,desc:'Continuous row of brilliant diamonds.',img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:21,name:'Choker Gold Chain',price:1799,desc:'Sleek choker-length gold chain.',img:'https://images.unsplash.com/photo-1573408301185-9519f94b5bff?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:22,name:'Beaded Gemstone Necklace',price:2899,desc:'Colourful semi-precious gemstones.',img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:23,name:'Chain-Link Statement Necklace',price:3899,desc:'Bold chain-link design.',img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:24,name:'Vintage Locket Necklace',price:2599,desc:'Gold locket with floral engravings.',img:'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:25,name:'Ruby Collar Necklace',price:8499,desc:'Deep red rubies in a regal collar.',img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:26,name:'Clover Diamond Pendant',price:4799,desc:'Four-leaf clover set with diamonds.',img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:27,name:'Sun Burst Pendant',price:3199,desc:'Radiant sun-burst pendant in gold.',img:'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:28,name:'Crescent Moon Pendant',price:2499,desc:'Slim crescent moon with a diamond.',img:'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:29,name:'Feather Pendant',price:1699,desc:'Lightweight feather pendant.',img:'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:30,name:'Hummingbird Pendant',price:3699,desc:'Intricate hummingbird with enamel.',img:'https://images.unsplash.com/photo-1630350020038-c3a6e3af39b5?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:31,name:'Initial Letter Pendant',price:1499,desc:'Personalised initial pendant.',img:'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:32,name:'Hamsa Hand Pendant',price:2299,desc:'Hamsa hand for protection.',img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:33,name:'Lotus Diamond Pendant',price:5699,desc:'Lotus flower with a diamond centre.',img:'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:34,name:'Crown Pendant',price:3999,desc:'Dainty crown pendant.',img:'https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:35,name:'Cross Diamond Pendant',price:4399,desc:'Classic cross with pavé diamonds.',img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:36,name:'Twisted Gold Necklace',price:2199,desc:'Twisted rope-style gold chain.',img:'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:37,name:'Coin Charm Necklace',price:1999,desc:'Engraved gold coin charm.',img:'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:38,name:'Amethyst Necklace',price:3799,desc:'Vivid purple amethyst on gold.',img:'https://images.unsplash.com/photo-1573408301185-9519f94b5bff?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:39,name:'Bar Necklace',price:1499,desc:'Sleek gold bar necklace.',img:'https://images.unsplash.com/photo-1614793745253-6c20f8c53b1f?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:40,name:'Y-Drop Necklace',price:2799,desc:'Long Y-drop necklace.',img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:41,name:'Pear-Cut Diamond Pendant',price:9999,desc:'Stunning pear-cut diamond.',img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:42,name:'Halo Diamond Pendant',price:8799,desc:'Round diamond with a halo.',img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:43,name:'Marquise Diamond Necklace',price:11499,desc:'Marquise-cut diamond on platinum.',img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:44,name:'Baguette Diamond Necklace',price:7999,desc:'Baguette diamonds in a bar.',img:'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:45,name:'Princess-Cut Pendant',price:8299,desc:'Princess-cut diamond in bezel.',img:'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:46,name:'Delicate Chain Pendant',price:1299,desc:'Ultra-fine chain with diamond.',img:'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=600&q=80&fit=crop',tags:['pendant','necklace']},
+      {id:47,name:'Gold Bead Necklace',price:1599,desc:'Simple gold bead necklace.',img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:48,name:'Tiny Star Pendant',price:999,desc:'Dainty star pendant.',img:'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:49,name:'Simple Circle Pendant',price:1199,desc:'Circle pendant for eternity.',img:'https://images.unsplash.com/photo-1630350020038-c3a6e3af39b5?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:50,name:'Thin Herringbone Necklace',price:2499,desc:'Trendy flat herringbone chain.',img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&fit=crop',tags:['necklace']}
+    ];
+    const store = {
+      get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } },
+      set: (k,v) => localStorage.setItem(k, JSON.stringify(v)),
+    };
+    const currentUser = store.get('zivara_session');
+    const userKey = (s) => `zivara_${currentUser?.email || 'guest'}_${s}`;
+    let wishlist = store.get(userKey('wishlist')) || [];
+    let cart     = store.get(userKey('cart'))     || [];
+    function fmt(n) { return '₹' + n.toLocaleString('en-IN'); }
+    function render() {
+      const grid    = document.getElementById('wishlist-grid');
+      const empty   = document.getElementById('wish-empty');
+      const pill    = document.getElementById('wish-pill');
+      const sub     = document.getElementById('wish-subtitle');
+      const addAll  = document.getElementById('add-all-btn');
+      pill.textContent = wishlist.length;
+      sub.textContent  = wishlist.length
+        ? wishlist.length + ' piece' + (wishlist.length > 1 ? 's' : '') + ' saved'
+        : 'Your saved pieces';
+      addAll.disabled  = wishlist.length === 0;
+      if (!wishlist.length) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      grid.innerHTML = wishlist.map((id, i) => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p) return '';
+        const inCart = cart.some(c => c.productId === id);
+        const tag    = p.tags[0].charAt(0).toUpperCase() + p.tags[0].slice(1);
+        return `
+          <div class="wish-card" style="animation-delay:${i*60}ms">
+            <div class="wish-card-img">
+              <img src="${p.img}" alt="${p.name}"
+                onerror="this.parentElement.innerHTML='💎'"/>
+              <button class="remove-wish-btn" onclick="removeFromWishlist(${p.id})" title="Remove">✕</button>
+            </div>
+            <div class="wish-card-body">
+              <p class="wish-card-tag">${tag}</p>
+              <h4 class="wish-card-name">${p.name}</h4>
+              <p class="wish-card-desc">${p.desc}</p>
+              <p class="wish-card-price">${fmt(p.price)}</p>
+              <div class="wish-card-actions">
+                <button class="wish-add-btn ${inCart ? 'added' : ''}"
+                  id="wish-add-${p.id}"
+                  onclick="addToCart(${p.id})">
+                  ${inCart ? '✓ In Cart' : 'Add to Cart'}
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+    function removeFromWishlist(id) {
+      wishlist = wishlist.filter(x => x !== id);
+      store.set(userKey('wishlist'), wishlist);
+      render();
+      showToast('Removed from wishlist.');
+    }
+    function addToCart(id) {
+      if (!currentUser) {
+        showToast('Please sign in on the main page first.');
+        return;
+      }
+      const idx = cart.findIndex(c => c.productId === id);
+      idx >= 0 ? cart[idx].qty++ : cart.push({ productId: id, qty: 1 });
+      store.set(userKey('cart'), cart);
+      const btn = document.getElementById('wish-add-' + id);
+      if (btn) { btn.textContent = '✓ In Cart'; btn.classList.add('added'); }
+      const p = PRODUCTS.find(x => x.id === id);
+      showToast(`${p.name} added to cart! 🛍`);
+    }
+    function addAllToCart() {
+      if (!currentUser) {
+        showToast('Please sign in on the main page first.');
+        return;
+      }
+      wishlist.forEach(id => {
+        const idx = cart.findIndex(c => c.productId === id);
+        idx >= 0 ? cart[idx].qty++ : cart.push({ productId: id, qty: 1 });
+      });
+      store.set(userKey('cart'), cart);
+      render();
+      showToast('All items added to cart! 🛍');
+    }
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('page-toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zivara | Your Cart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-header {
+      background: var(--ink);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .page-header .logo-link {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none;
+    }
+    .page-header .logo-gem { color: var(--gold); font-size: 1.1rem; }
+    .page-header .logo-text {
+      font-family: var(--font-display);
+      font-size: 1.4rem; color: var(--gold-light);
+      letter-spacing: 0.2em;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem; letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--gold-light); }
+    .back-link span { font-size: 1.1rem; }
+    .cart-page {
+      min-height: calc(100vh - 80px);
+      background: var(--surface);
+      padding: 48px 40px;
+    }
+    .cart-page-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .cart-page-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .cart-page-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .cart-items-section {
+      background: white;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .cart-section-head {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cart-section-head h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 400;
+    }
+    .cart-count-pill {
+      background: var(--ink);
+      color: var(--gold-light);
+      font-size: 0.72rem; font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+    .cart-item-row {
+      display: flex;
+      gap: 20px;
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: background var(--transition);
+      animation: rowIn 0.35s ease both;
+    }
+    .cart-item-row:last-child { border-bottom: none; }
+    .cart-item-row:hover { background: #fdfaf6; }
+    @keyframes rowIn {
+      from { opacity:0; transform: translateY(10px); }
+      to   { opacity:1; transform: none; }
+    }
+    .cart-item-thumb {
+      width: 96px; height: 96px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #f8f4ee;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .cart-item-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .cart-item-details { flex: 1; }
+    .cart-item-tag {
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 4px;
+    }
+    .cart-item-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--ink); margin-bottom: 4px;
+    }
+    .cart-item-desc {
+      font-size: 0.78rem; color: var(--muted);
+      line-height: 1.5; margin-bottom: 12px;
+    }
+    .cart-item-controls {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .qty-wrap {
+      display: flex; align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+    .qty-btn-lg {
+      width: 34px; height: 34px;
+      background: none; border: none;
+      font-size: 1.1rem; cursor: pointer;
+      color: var(--ink);
+      transition: background var(--transition);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qty-btn-lg:hover { background: #f0ebe2; }
+    .qty-val-lg {
+      min-width: 32px; text-align: center;
+      font-size: 0.9rem; font-weight: 500;
+    }
+    .remove-btn {
+      font-size: 0.75rem; color: #c95050;
+      background: none; border: none;
+      cursor: pointer; padding: 4px 8px;
+      border-radius: 6px;
+      transition: background var(--transition);
+      letter-spacing: 0.03em;
+    }
+    .remove-btn:hover { background: #fdf0f0; }
+    .cart-item-price-col {
+      text-align: right;
+      min-width: 90px;
+    }
+    .cart-item-unit-price {
+      font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;
+    }
+    .cart-item-total-price {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 600;
+      color: var(--gold-dark);
+    }
+    .cart-empty-state {
+      padding: 80px 40px;
+      text-align: center;
+    }
+    .empty-gem { font-size: 3.5rem; margin-bottom: 20px; }
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 300;
+      color: var(--ink); margin-bottom: 10px;
+    }
+    .empty-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
+    .order-summary {
+      background: white;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 28px;
+      position: sticky;
+      top: 100px;
+    }
+    .summary-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 400;
+      margin-bottom: 24px;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-row.total {
+      font-size: 1rem; font-weight: 600;
+      color: var(--ink);
+      margin-top: 4px;
+      padding-top: 16px;
+      border-top: 2px solid var(--border);
+      border-bottom: none;
+    }
+    .summary-row.total .summary-amount {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--gold-dark);
+    }
+    .promo-wrap {
+      margin: 20px 0;
+      display: flex; gap: 8px;
+    }
+    .promo-input {
+      flex: 1; padding: 10px 14px;
+      border: 1.5px solid #e8e0d4;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .promo-input:focus { border-color: var(--gold); }
+    .promo-btn {
+      padding: 10px 18px;
+      background: var(--ink);
+      color: var(--gold-light);
+      border: none; border-radius: 50px;
+      font-size: 0.78rem; font-weight: 500;
+      cursor: pointer;
+      transition: background var(--transition);
+      white-space: nowrap;
+    }
+    .promo-btn:hover { background: var(--ink-soft); }
+    .checkout-btn {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+      color: white;
+      border: none; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all var(--transition);
+      box-shadow: 0 4px 16px rgba(160,120,64,0.35);
+    }
+    .checkout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(160,120,64,0.45);
+    }
+    .checkout-btn:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+    }
+    .secure-note {
+      text-align: center;
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .secure-note span { color: #4caf50; }
+    .order-success {
+      display: none;
+      background: linear-gradient(135deg, #1a2e1a, #0f1f0f);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      color: white;
+    }
+    .order-success.show { display: block; animation: successIn 0.5s ease; }
+    @keyframes successIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:none} }
+    .success-icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-title {
+      font-family: var(--font-display);
+      font-size: 2rem; font-weight: 300;
+      color: #8fce8f; margin-bottom: 8px;
+    }
+    .success-sub { font-size: 0.88rem; color: rgba(255,255,255,0.6); margin-bottom: 24px; }
+    .page-toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: var(--gold-light);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 999;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .page-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    @media (max-width: 900px) {
+      .cart-page { padding: 32px 20px; }
+      .cart-page-grid { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+      .page-header { padding: 20px; }
+    }
+    @media (max-width: 600px) {
+      .cart-item-row { flex-wrap: wrap; }
+      .cart-item-price-col { width: 100%; text-align: left; margin-top: 8px; }
+      .cart-item-thumb { width: 76px; height: 76px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="page-toast" class="page-toast"></div>
+  <header class="page-header">
+    <a href="index.html" class="logo-link">
+      <span class="logo-gem">◆</span>
+      <span class="logo-text">ZIVARA</span>
+    </a>
+    <a href="index.html" class="back-link">
+      <span>←</span> Continue Shopping
+    </a>
+  </header>
+  <main class="cart-page">
+    <div style="max-width:1200px; margin:0 auto;">
+      <h1 class="cart-page-title">Your Cart</h1>
+      <p class="cart-page-subtitle" id="cart-subtitle">Loading your items…</p>
+    </div>
+    <div class="cart-page-grid" id="cart-page-grid">
+      <div>
+        <div id="order-success" class="order-success">
+          <div class="success-icon">🎉</div>
+          <h2 class="success-title">Order Placed!</h2>
+          <p class="success-sub">Thank you for shopping with Zivara. Your pieces are on their way.</p>
+          <a href="index.html" class="btn-primary" style="display:inline-flex">Back to Collection</a>
+        </div>
+        <div id="cart-items-section" class="cart-items-section">
+          <div class="cart-section-head">
+            <h3>Items</h3>
+            <span class="cart-count-pill" id="cart-count-pill">0 items</span>
+          </div>
+          <div id="cart-rows"></div>
+          <div id="cart-empty-state" class="cart-empty-state hidden">
+            <div class="empty-gem">💎</div>
+            <h3 class="empty-title">Your cart is empty</h3>
+            <p class="empty-sub">Discover our handcrafted diamond pieces</p>
+            <a href="index.html" class="btn-primary">Explore Collection</a>
+          </div>
+        </div>
+      </div>
+      <div id="summary-col">
+        <div class="order-summary">
+          <h3 class="summary-title">Order Summary</h3>
+          <div class="summary-row">
+            <span>Subtotal (<span id="s-qty">0</span> items)</span>
+            <span id="s-subtotal">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span id="s-shipping">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span>GST (3%)</span>
+            <span id="s-tax">₹0</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span class="summary-amount" id="s-total">₹0</span>
+          </div>
+          <div class="promo-wrap">
+            <input type="text" class="promo-input" id="promo-input" placeholder="Promo code" />
+            <button class="promo-btn" onclick="applyPromo()">Apply</button>
+          </div>
+          <button class="checkout-btn" id="checkout-btn" onclick="doCheckout()" disabled>
+            Proceed to Checkout
+          </button>
+          <p class="secure-note"><span>🔒</span> Secure checkout · Free shipping over ₹5,000</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const PRODUCTS = [
+      {id:1,name:'Diamond Solitaire Pendant',price:4999,desc:'Elegant solitaire diamond pendant for special moments.',img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:2,name:'Heart × Bow Pendant',price:5299,desc:'A whimsical blend of romance and playfulness.',img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:3,name:'Butterfly Pendant',price:2299,desc:'Delicate butterfly pendant for effortless elegance.',img:'https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:4,name:'Sapphire Drop Pendant',price:5299,desc:'Deep blue sapphire set in lustrous white gold.',img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:5,name:'Heart Diamond Pendant',price:5299,desc:'A heart of diamonds — wear your love every day.',img:'https://images.unsplash.com/photo-1573408301185-9519f94b5bff?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:6,name:'Classic Solitaire Pendant',price:7299,desc:'Timeless solitaire diamond pendant, forever in style.',img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:7,name:'Bow Charm Pendant',price:2299,desc:'Sweet bow pendant that adds a touch of charm.',img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:8,name:'Floral Diamond Pendant',price:6499,desc:'Blooming flower design with clustered diamonds.',img:'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:9,name:'Star Pendant',price:1899,desc:'Minimalist star pendant in polished gold.',img:'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:10,name:'Moon & Star Pendant',price:2799,desc:'Celestial moon and star duo on a fine chain.',img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:11,name:'Teardrop Crystal Pendant',price:3499,desc:'Teardrop crystal pendant with subtle shimmer.',img:'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:12,name:'Rose Gold Heart Pendant',price:4199,desc:'Open heart pendant in warm rose gold.',img:'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:13,name:'Infinity Diamond Pendant',price:5899,desc:'Infinity loop studded with brilliant-cut diamonds.',img:'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:14,name:'Evil Eye Pendant',price:1999,desc:'Protective evil eye charm in gold and enamel.',img:'https://images.unsplash.com/photo-1630350020038-c3a6e3af39b5?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:15,name:'Oval Emerald Pendant',price:6799,desc:'Vivid green emerald in a classic oval setting.',img:'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:16,name:'Diamond Swan Necklace',price:3499,desc:'Sleek and graceful neck chain perfect for every occasion.',img:'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:17,name:'Layered Gold Necklace',price:3299,desc:'Multi-layer necklace for a curated, stacked look.',img:'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&fit=crop',tags:['necklace','pendant']},
+      {id:18,name:'Marine Wave Necklace',price:2299,desc:'Ocean-inspired necklace with a fluid, wave-like form.',img:'https://images.unsplash.com/photo-1614793745253-6c20f8c53b1f?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:19,name:'Pearl Strand Necklace',price:4599,desc:'Lustrous freshwater pearl strand with gold clasp.',img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:20,name:'Diamond Tennis Necklace',price:12999,desc:'Continuous row of brilliant diamonds — pure luxury.',img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:21,name:'Choker Gold Chain',price:1799,desc:'Sleek choker-length gold chain for everyday glam.',img:'https://images.unsplash.com/photo-1573408301185-9519f94b5bff?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:22,name:'Beaded Gemstone Necklace',price:2899,desc:'Colourful semi-precious gemstones on a gold wire.',img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:23,name:'Chain-Link Statement Necklace',price:3899,desc:'Bold chain-link design that makes a statement.',img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:24,name:'Vintage Locket Necklace',price:2599,desc:'Gold locket with floral engravings — holds a photo.',img:'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:25,name:'Ruby Collar Necklace',price:8499,desc:'Deep red rubies set in a regal collar necklace.',img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:26,name:'Clover Diamond Pendant',price:4799,desc:'Four-leaf clover set with sparkling diamonds.',img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:27,name:'Sun Burst Pendant',price:3199,desc:'Radiant sun-burst pendant in yellow gold.',img:'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:28,name:'Crescent Moon Pendant',price:2499,desc:'Slim crescent moon pendant with a single diamond.',img:'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:29,name:'Feather Pendant',price:1699,desc:'Lightweight feather pendant for a free-spirited look.',img:'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:30,name:'Hummingbird Pendant',price:3699,desc:'Intricate hummingbird pendant with coloured enamel.',img:'https://images.unsplash.com/photo-1630350020038-c3a6e3af39b5?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:31,name:'Initial Letter Pendant',price:1499,desc:'Personalised initial pendant in polished gold.',img:'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:32,name:'Hamsa Hand Pendant',price:2299,desc:'Hamsa hand pendant for protection and blessings.',img:'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:33,name:'Lotus Diamond Pendant',price:5699,desc:'Lotus flower with a diamond centre — pure serenity.',img:'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:34,name:'Crown Pendant',price:3999,desc:'Dainty crown pendant — wear your royalty.',img:'https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:35,name:'Cross Diamond Pendant',price:4399,desc:'Classic cross pendant with pavé diamond accents.',img:'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:36,name:'Twisted Gold Necklace',price:2199,desc:'Twisted rope-style gold chain, sleek and modern.',img:'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:37,name:'Coin Charm Necklace',price:1999,desc:'Engraved gold coin charm on a delicate chain.',img:'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:38,name:'Amethyst Necklace',price:3799,desc:'Vivid purple amethyst pendant on a gold chain.',img:'https://images.unsplash.com/photo-1573408301185-9519f94b5bff?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:39,name:'Bar Necklace',price:1499,desc:'Sleek gold bar necklace — minimalist elegance.',img:'https://images.unsplash.com/photo-1614793745253-6c20f8c53b1f?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:40,name:'Y-Drop Necklace',price:2799,desc:'Long Y-drop necklace perfect for deep necklines.',img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:41,name:'Pear-Cut Diamond Pendant',price:9999,desc:'Stunning pear-cut diamond in a prong setting.',img:'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:42,name:'Halo Diamond Pendant',price:8799,desc:'Round diamond surrounded by a halo of smaller stones.',img:'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:43,name:'Marquise Diamond Necklace',price:11499,desc:'Elegant marquise-cut diamond on a platinum chain.',img:'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:44,name:'Baguette Diamond Necklace',price:7999,desc:'Baguette diamonds set in a linear bar necklace.',img:'https://images.unsplash.com/photo-1584302179602-e4c3d3fd629d?w=600&q=80&fit=crop',tags:['necklace','diamond']},
+      {id:45,name:'Princess-Cut Pendant',price:8299,desc:'Bold princess-cut diamond in a bezel setting.',img:'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80&fit=crop',tags:['pendant','diamond']},
+      {id:46,name:'Delicate Chain Pendant',price:1299,desc:'Ultra-fine chain with a tiny diamond accent.',img:'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?w=600&q=80&fit=crop',tags:['pendant','necklace']},
+      {id:47,name:'Gold Bead Necklace',price:1599,desc:'Simple gold bead necklace, perfect for daily wear.',img:'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80&fit=crop',tags:['necklace']},
+      {id:48,name:'Tiny Star Pendant',price:999,desc:'Dainty star pendant — sweet and understated.',img:'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:49,name:'Simple Circle Pendant',price:1199,desc:'Perfect circle pendant symbolising eternity.',img:'https://images.unsplash.com/photo-1630350020038-c3a6e3af39b5?w=600&q=80&fit=crop',tags:['pendant']},
+      {id:50,name:'Thin Herringbone Necklace',price:2499,desc:'Trendy flat herringbone chain in polished gold.',img:'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&q=80&fit=crop',tags:['necklace']}
+    ];
+    const store = {
+      get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } },
+      set: (k,v) => localStorage.setItem(k, JSON.stringify(v)),
+      remove: (k) => localStorage.removeItem(k)
+    };
+    const currentUser = store.get('zivara_session');
+    const userKey = (s) => `zivara_${currentUser?.email || 'guest'}_${s}`;
+    let cart = store.get(userKey('cart')) || [];
+    function fmt(n) { return '₹' + n.toLocaleString('en-IN'); }
+    function render() {
+      const rows    = document.getElementById('cart-rows');
+      const empty   = document.getElementById('cart-empty-state');
+      const section = document.getElementById('cart-items-section');
+      const success = document.getElementById('order-success');
+      const pill    = document.getElementById('cart-count-pill');
+      const sub     = document.getElementById('cart-subtitle');
+      if (!cart.length) {
+        rows.innerHTML = '';
+        empty.classList.remove('hidden');
+        pill.textContent = '0 items';
+        sub.textContent = 'Your cart is empty.';
+        updateSummary();
+        document.getElementById('checkout-btn').disabled = true;
+        return;
+      }
+      empty.classList.add('hidden');
+      document.getElementById('checkout-btn').disabled = false;
+      const totalQty = cart.reduce((s,c) => s + c.qty, 0);
+      pill.textContent = totalQty + (totalQty === 1 ? ' item' : ' items');
+      sub.textContent = totalQty + (totalQty === 1 ? ' item' : ' items') + ' in your cart';
+      rows.innerHTML = cart.map(({productId, qty}, i) => {
+        const p = PRODUCTS.find(x => x.id === productId);
+        if (!p) return '';
+        const tag = p.tags[0].charAt(0).toUpperCase() + p.tags[0].slice(1);
+        return `
+          <div class="cart-item-row" style="animation-delay:${i*60}ms">
+            <div class="cart-item-thumb">
+              <img src="${p.img}" alt="${p.name}"
+                onerror="this.parentElement.innerHTML='💎'"/>
+            </div>
+            <div class="cart-item-details">
+              <p class="cart-item-tag">${tag}</p>
+              <h4 class="cart-item-title">${p.name}</h4>
+              <p class="cart-item-desc">${p.desc}</p>
+              <div class="cart-item-controls">
+                <div class="qty-wrap">
+                  <button class="qty-btn-lg" onclick="changeQty(${p.id}, -1)">−</button>
+                  <span class="qty-val-lg">${qty}</span>
+                  <button class="qty-btn-lg" onclick="changeQty(${p.id}, +1)">+</button>
+                </div>
+                <button class="remove-btn" onclick="removeItem(${p.id})">Remove</button>
+              </div>
+            </div>
+            <div class="cart-item-price-col">
+              <p class="cart-item-unit-price">${fmt(p.price)} each</p>
+              <p class="cart-item-total-price">${fmt(p.price * qty)}</p>
+            </div>
+          </div>`;
+      }).join('');
+      updateSummary();
+    }
+    function updateSummary() {
+      const subtotal = cart.reduce((s,c) => {
+        const p = PRODUCTS.find(x => x.id === c.productId);
+        return p ? s + p.price * c.qty : s;
+      }, 0);
+      const shipping = subtotal >= 5000 ? 0 : 199;
+      const tax      = Math.round(subtotal * 0.03);
+      const total    = subtotal + shipping + tax;
+      const qty      = cart.reduce((s,c) => s + c.qty, 0);
+      document.getElementById('s-qty').textContent      = qty;
+      document.getElementById('s-subtotal').textContent = fmt(subtotal);
+      document.getElementById('s-shipping').textContent = shipping === 0 ? 'Free 🎉' : fmt(shipping);
+      document.getElementById('s-tax').textContent      = fmt(tax);
+      document.getElementById('s-total').textContent    = fmt(total);
+    }
+    function changeQty(id, delta) {
+      const idx = cart.findIndex(c => c.productId === id);
+      if (idx < 0) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      store.set(userKey('cart'), cart);
+      render();
+    }
+    function removeItem(id) {
+      cart = cart.filter(c => c.productId !== id);
+      store.set(userKey('cart'), cart);
+      render();
+      showToast('Item removed from cart.');
+    }
+    function applyPromo() {
+      const code = document.getElementById('promo-input').value.trim().toUpperCase();
+      if (code === 'ZIVARA10') showToast('Promo code applied! 10% off 🎉');
+      else showToast('Invalid promo code.');
+    }
+    function doCheckout() {
+      if (!currentUser) {
+        showToast('Please sign in on the main page first.');
+        return;
+      }
+      const orders = store.get(userKey('orders')) || [];
+      const items  = cart.map(({productId,qty}) => {
+        const p = PRODUCTS.find(x => x.id === productId);
+        return { name: p.name, price: p.price, qty };
+      });
+      const subtotal = items.reduce((s,i) => s + i.price * i.qty, 0);
+      const shipping = subtotal >= 5000 ? 0 : 199;
+      const tax      = Math.round(subtotal * 0.03);
+      const total    = subtotal + shipping + tax;
+      orders.push({
+        id:   Date.now(),
+        date: new Date().toLocaleDateString('en-IN', {year:'numeric',month:'long',day:'numeric'}),
+        items, total
+      });
+      store.set(userKey('orders'), orders);
+      cart = [];
+      store.set(userKey('cart'), cart);
+      document.getElementById('cart-items-section').style.display = 'none';
+      document.getElementById('summary-col').style.display = 'none';
+      document.getElementById('order-success').classList.add('show');
+      document.getElementById('cart-subtitle').textContent = 'Order confirmed!';
+    }
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('page-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+    render();
+  </script>
+</body>
+</html>
