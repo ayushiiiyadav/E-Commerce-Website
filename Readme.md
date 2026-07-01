@@ -26,10 +26,12 @@ A modern, elegant, and fully functional **luxury jewellery e-commerce website** 
 - Google Fonts (`Cormorant Garamond` + `Inter`)
 
 ## 📁 Project Structure
+
+```bash
 Zivara-E-Commerce/
-├── index.html                 # Main homepage
-├── cart.html                  # Dedicated cart page
-├── wishlist.html              # Wishlist page
-├── style.css                  # All styles
-├── script.js                  # Main JavaScript logic
-└── images/                    # Product images
+├── index.html          # Main homepage
+├── cart.html           # Dedicated cart page
+├── wishlist.html       # Wishlist page
+├── style.css           # All styles
+├── script.js           # Main JavaScript logic
+└── images/             # Product images
