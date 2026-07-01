@@ -1,7 +1,8 @@
 # Zivara - Luxury Diamond Jewellery E-Commerce
 
 A modern, elegant, and fully functional **luxury jewellery e-commerce website** built with pure HTML, CSS, and JavaScript. Zivara specializes in diamond pendants and neck chains with a premium user experience.
-🌐 **Live Demo**: [Zivara on Vercel](https://zivara-jsdvc34dn-ayushi-yadav-projects.vercel.app/)
+
+🌐 **Live Demo**: [click here!](https://zivara-jsdvc34dn-ayushi-yadav-projects.vercel.app/)
 
 ## ✨ Features
 
